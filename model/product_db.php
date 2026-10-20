@@ -2,15 +2,20 @@
 <?php
 function get_products_by_category($category_id) {
     global $db;
-    $query = 'SELECT * FROM products
+
+    $query = 'SELECT *
+              FROM products
               WHERE categoryID = :category_id
               ORDER BY productID';
+
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':category_id', $category_id);
         $statement->execute();
+
         $result = $statement->fetchAll();
         $statement->closeCursor();
+
         return $result;
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
@@ -20,15 +25,19 @@ function get_products_by_category($category_id) {
 
 function get_product($product_id) {
     global $db;
+
     $query = 'SELECT *
               FROM products
               WHERE productID = :product_id';
+
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':product_id', $product_id);
         $statement->execute();
+
         $result = $statement->fetch();
         $statement->closeCursor();
+
         return $result;
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
@@ -58,16 +67,17 @@ function get_product_by_name($product_name) {
     }
 }
 
-
 function add_product($category_id, $code, $name, $description,
-        $price, $discount_percent) {
+                     $price, $discount_percent) {
     global $db;
+
     $query = 'INSERT INTO products
                  (categoryID, productCode, productName, description,
                   listPrice, discountPercent, dateAdded)
               VALUES
                  (:category_id, :code, :name, :description, :price,
                   :discount_percent, NOW())';
+
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':category_id', $category_id);
@@ -79,8 +89,7 @@ function add_product($category_id, $code, $name, $description,
         $statement->execute();
         $statement->closeCursor();
 
-        $product_id = $db->lastInsertId();
-        return $product_id;
+        return $db->lastInsertId();
     } catch (PDOException $e) {
         throw $e;
     }
@@ -89,6 +98,7 @@ function add_product($category_id, $code, $name, $description,
 function update_product($product_id, $code, $name, $description,
                         $price, $discount_percent, $category_id) {
     global $db;
+
     $query = 'UPDATE Products
               SET productName = :name,
                   productCode = :code,
@@ -97,6 +107,7 @@ function update_product($product_id, $code, $name, $description,
                   discountPercent = :discount_percent,
                   categoryID = :category_id
               WHERE productID = :product_id';
+
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':name', $name);
@@ -106,8 +117,11 @@ function update_product($product_id, $code, $name, $description,
         $statement->bindValue(':discount_percent', $discount_percent);
         $statement->bindValue(':category_id', $category_id);
         $statement->bindValue(':product_id', $product_id);
-        $row_count = $statement->execute();
+        $statement->execute();
+
+        $row_count = $statement->rowCount();
         $statement->closeCursor();
+
         return $row_count;
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
@@ -117,12 +131,19 @@ function update_product($product_id, $code, $name, $description,
 
 function delete_product($product_id) {
     global $db;
-    $query = 'DELETE FROM products WHERE productID = :product_id';
+
+    $query = 'DELETE FROM products
+              WHERE productID = :product_id';
+
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':product_id', $product_id);
-        $row_count = $statement->execute();
+        $statement->execute();
+
+        // Return the number of rows actually deleted
+        $row_count = $statement->rowCount();
         $statement->closeCursor();
+
         return $row_count;
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
