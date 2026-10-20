@@ -1,3 +1,4 @@
+
 <?php
 require('util/main.php');
 
@@ -21,7 +22,7 @@ $products = get_products_by_category($cat_id);
 // Sample data
 $product_name = 'Fender Telecaster';
 
-// Delete the product and display an appropriate messge
+// Delete the product and display an appropriate message
 $delete_message = "No rows were deleted.";
 
 /***************************************
@@ -34,11 +35,23 @@ $code = 'tele';
 $name = 'Fender Telecaster';
 $description = 'NA';
 $price = '949.99';
+$discount_percent = 0;
 
 // Insert the data
+try {
+    $product_id = add_product(
+        $category_id,
+        $code,
+        $name,
+        $description,
+        $price,
+        $discount_percent
+    );
 
-// Display an appropriate message
-$insert_message = "No rows were inserted.";
+    $insert_message = "Product was added successfully.";
+} catch (PDOException $e) {
+    $insert_message = "Product could not be added. The product code may already exist.";
+}
 
 include 'home.php';
 ?>
