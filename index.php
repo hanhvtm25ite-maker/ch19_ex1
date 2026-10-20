@@ -9,7 +9,7 @@ require('model/product_db.php');
  * Select some products
  **********************************************/
 
-// Select products in the Guitars category
+// Sample data
 $cat_id = 1;
 
 // Get the products
@@ -22,7 +22,7 @@ $products = get_products_by_category($cat_id);
 // Sample data
 $product_name = 'Fender Telecaster';
 
-// Delete the product and display an appropriate message
+// Delete message (Question 7 will implement deletion)
 $delete_message = "No rows were deleted.";
 
 /***************************************
@@ -48,10 +48,11 @@ try {
         $discount_percent
     );
 
-    $insert_message = "Product was added successfully.";
+    $insert_message = "Product was added successfully. Product ID: " . $product_id;
 } catch (PDOException $e) {
     $insert_message = "Product could not be added. The product code may already exist.";
 }
 
+// Display the page
 include 'home.php';
 ?>
