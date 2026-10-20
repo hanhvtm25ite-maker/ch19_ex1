@@ -8,8 +8,8 @@ require('model/product_db.php');
  * Select some products
  **********************************************/
 
-// Sample data
-$cat_id = 2;
+// Select products in the Guitars category
+$cat_id = 1;
 
 // Get the products
 $products = get_products_by_category($cat_id);
